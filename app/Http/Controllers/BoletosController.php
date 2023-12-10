@@ -15,6 +15,11 @@ class BoletosController extends Controller
         session(['fecha' => $request->fecha]);
         session(['ninos' => $request->ninos]);
         session(['adultos' => $request->adultos]);
+        $fechaCarbon = \Carbon\Carbon::createFromFormat('d-m-Y', $request->fecha);
+        // Sumar un día
+        $fechaSumada = $fechaCarbon->addDay();
+        $fechaFormateada = $fechaSumada->format('d-m-Y');
+        session(['fecha_llegada' => $fechaFormateada]);
         $chofer = Chofer::inRandomOrder()->first();
         return view('itinerario', compact('chofer'));
     }

@@ -9,21 +9,11 @@
 
         <div class="input-field col s12 m2">
             <select id="origen" name="origen">
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
             </select>
             <label><span class="material-icons left green-text">location_on</span>Origen</label>
         </div>
         <div class="input-field col s12 m2">
             <select id="destino" name="destino">
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
             </select>
             <label><span class="material-icons left green-text">location_on</span>Destino</label>
         </div>
@@ -216,10 +206,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelectorAll('.datepicker');
             var instances = M.Datepicker.init(elems, {
-                format: 'dd mmm, yyyy',
+                format: 'dd-mm-yyyy',
                 i18n: {
                     months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Dic"],
+                    monthsShort: ["01", "02", "03", "04", "05", "05", "07", "08", "09", "10", "11", "12"],
                     weekdays: ["Domingo","Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                     weekdaysShort: ["Dom","Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
                     weekdaysAbbrev: ["D","L", "M", "M", "J", "V", "S"],
@@ -281,13 +271,77 @@
         localStorage.setItem('salida', salidas[Math.floor(Math.random() * salidas.length)]);
         localStorage.setItem('llegada', llegadas[Math.floor(Math.random() * llegadas.length)]);
         localStorage.setItem('duracion', (12- Number(localStorage.getItem('salida'))) + Number(localStorage.getItem('llegada')));
-        //costo = costos[Math.floor(Math.random() * costos.length)];
-        //salida = salidas[Math.floor(Math.random() * salidas.length)];
-        //llegada = llegadas[Math.floor(Math.random() * llegadas.length)];
-        //duracion = (12- salida) + llegada;
         document.getElementById('costo').innerHTML = '$'+ localStorage.getItem('costo'); 
         document.getElementById('salida').innerHTML =  localStorage.getItem('salida')+':00 pm' ;
         document.getElementById('llegada').innerHTML =  localStorage.getItem('llegada') +':00 am' ;
         document.getElementById('duracion').innerHTML = 'Duracion: '+  localStorage.getItem('duracion') +':00 horas' ;
+    </script>
+        <script>
+        const ciudadesM= [
+        "Huejutla",
+        "Atlapexco",
+        "Pachuca",
+        "Tulancingo",
+        "Mineral de la Reforma",
+        "Tizayuca",
+        "Actopan",
+        "Ciudad de México",
+        "Guadalajara",
+        "Monterrey",
+        "Puebla",
+        "Tijuana",
+        "Querétaro",
+        "Mérida",
+        "Cancún",
+        "Oaxaca",
+        ];
+
+        function cargarDestinos(ciudades, selectId, origenSeleccionado) {
+            const selectDestino = document.getElementById(selectId);
+
+            ciudades.forEach(ciudad => {
+                if (ciudad !== origenSeleccionado) {
+                const opcion = document.createElement("option");
+                opcion.text = ciudad;
+                opcion.value = ciudad;
+                if(localStorage.getItem('destino') === ciudad){
+                    opcion.selected = true;
+                }
+                selectDestino.appendChild(opcion);
+                }
+            });
+            selectDestino.addEventListener("change", function() {
+                const origenSeleccionado = this.value;
+                localStorage.setItem('destino', origenSeleccionado);
+            });
+
+        }
+
+        // Función para agregar opciones al select de origen
+        function agregarCiudadesAlSelect(ciudades, selectId, selectDestinoId) {
+            const selectOrigen = document.getElementById(selectId);
+
+            ciudades.forEach(ciudad => {
+                const opcion = document.createElement("option");
+                opcion.text = ciudad;
+                opcion.value = ciudad;
+                if(localStorage.getItem('origen') === ciudad){
+                    opcion.selected = true;
+                }
+                selectOrigen.appendChild(opcion);
+            });
+
+            // Evento change para el select de origen
+            selectOrigen.addEventListener("change", function() {
+                const origenSeleccionado = this.value;
+                localStorage.setItem('origen', origenSeleccionado);
+                window.location.reload();
+            });
+        }
+
+        agregarCiudadesAlSelect(ciudadesM, "origen", "destino");
+        const ciudadesFiltradas = ciudadesM.filter(ciudad => ciudad !== localStorage.getItem('origen'));
+        cargarDestinos(ciudadesFiltradas, "destino", localStorage.getItem('origen'));
+
     </script>
 @endsection

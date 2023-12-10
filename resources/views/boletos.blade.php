@@ -13,8 +13,8 @@
         <div class="col s4 m1">
             <span class="material-icons center"> east </span>
         </div>
-        <div class="col s4 m1">
-            <img src="{{asset('imagenes/icons8-marca-de-verificación-64(1).png')}}" class="circle reponsive-img" style="max-height: 50px; border: 1px solid grey;"> 
+        <div class="col s4 m1 ">
+            <img src="{{asset('imagenes/icons8-marca-de-verificación-64(1).png')}}" class="circle reponsive-img green" style="max-height: 50px; border: 1px solid grey;"> 
         </div>
         <div class="col s4 m1">
             <span class="material-icons center"> east </span>
@@ -79,6 +79,20 @@
                             <label for="apellidos_{{$i}}">Apellidos:</label>
                             <strong style="color: red;">@error('apellidos_$i') {{ $message }} @enderror</strong> 
                         </div>
+                        <div class="col s1"></div>
+                        <div class="input-field col s10">
+                            <input type="text" name="costoA" id="" readonly value=" ">
+                            <label for="costoA">Tipo de boleto:</label>
+                        </div>
+                        <div class="col s1"></div>
+                        <div class="col s12">
+                            <div class="row ">
+                                <div class="col s1"></div>
+                                <div class="col s10 grey"><b>Mayores de 18 años con identificacion</b></div>
+                            
+                            </div>
+                            
+                        </div>
                     </div>
                 @endfor
                 @for ($i=session('adultos') + 1; $i <=session('ninos') + session('adultos'); $i++)
@@ -95,12 +109,63 @@
                             <label for="apellidos_{{$i}}">Apellidos:</label>
                             <strong style="color: red;">@error('apellidos_$i') {{ $message }} @enderror</strong> 
                         </div>
+                        <div class="col s1"></div>
+                        <div class="input-field col s10">
+                            <input type="text" name="costoN" id="" readonly value=" ">
+                            <label for="costoN">Tipo de boleto:</label>
+                        </div>
+                        <div class="col s1"></div>
                     </div>
                 @endfor
             </div>
         </form>
-        <div class="col s12 m6">
-
+        <div class="col s0 m1"></div>
+        <div class="col s12 m5">
+            <div class="row " style="border: solid 1px black;">
+                <div class="col s12"><b>Itinerario de noche</b></div>
+                <div class="col s12 divider"></div>
+                <div class="col s12">
+                    <div class="row">
+                        <div class="col s6">{{session('origen');}}</div>
+                        <div class="col s6"><span style="color:#2e7d32" id="salida"></span></div>
+                        <div class="col s6"><span class="material-icons center">arrow_downward</span></div>
+                        <div class="col s6" style="height: 30px;"> </div><br>
+                        <div class="col s6">{{session('destino');}}</div>
+                        <div class="col s6"><span style="color:#2e7d32" id="llegada"></span></div>
+                    </div>
+                </div>
+                <div class="col s12 divider"></div>
+                <div class="col s12">
+                    <div class="row" >
+                        <div class="col s6">
+                            <span class="material-icons left">
+                                directions_bus
+                            </span>
+                            Primera Select
+                        </div>
+                        <div class="col s6" >
+                            <span class="material-icons left">
+                                location_on
+                            </span>
+                            Local
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="border: solid 1px black;">
+                <div class="col s12"><b>Detalles de pago</b></div>
+                <div class="col s12 divider"></div>
+                <div class="col s12"><b>{{session('ninos') + session('adultos')}} Pasajeros</b></div>
+                <div class="col s12 divider"></div>
+                <div class="row">
+                    <div class="col s6">SUBTOTAL</div>
+                    <div class="col s6"><span id="subtotal">$0</span></div>
+                    <div class="col s6">IVA</div><br>
+                    <div class="col s6" id="iva">$0</div>
+                    <div class="col s1"></div>
+                    <div class="col s10 red white-text"><span id="total">TOTAL: $0</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -109,5 +174,32 @@
 @section('scripts')
     <script>
         console.log(localStorage.getItem('costo'));
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener el valor que deseas asignar
+            var costo = localStorage.getItem('costo');
+            var subtotal=0;
+            // Seleccionar los campos por su atributo name
+            var campos = document.querySelectorAll('input[name="costoA"]');
+            var camposN = document.querySelectorAll('input[name="costoN"]');
+            // Iterar sobre los campos y asignarles el mismo valor
+            campos.forEach(function(campo) {
+                campo.value = 'Adulto $'+costo;
+                subtotal+=Number(costo);
+            });
+            camposN.forEach(function(camposN) {
+                camposN.value = 'Niño $'+costo/2;
+                subtotal+=Number(costo)/2;
+            });
+            var iva = subtotal *.16;
+            var total = subtotal + iva;
+            document.getElementById('salida').innerHTML = localStorage.getItem('salida')+':00 pm <br>' + '{{session("fecha")}}';
+            document.getElementById('llegada').innerHTML = localStorage.getItem('llegada')+':00 am <br>' + '{{session("fecha_llegada")}}'; 
+            document.getElementById('subtotal').innerHTML = '$'+ subtotal;
+            document.getElementById('iva').innerHTML = '$'+iva;
+            document.getElementById('total').innerHTML = 'TOTAL: $' + total;
+            localStorage.setItem('subtotal', subtotal);
+            localStorage.setItem('total', total);
+            localStorage.setItem('iva', iva);
+        });
     </script>
 @endsection

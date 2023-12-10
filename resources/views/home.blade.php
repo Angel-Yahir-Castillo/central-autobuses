@@ -5,25 +5,15 @@
 @section('content')
     <img src="{{asset('imagenes/The World(2).png')}}" class="responsive-img" style="max-width: 100%;" alt="Autobuses">
     <br>
-    <form class="row" method="get" action="{{route('buscar')}}">
+    <form id="form_1" class="row" method="get" action="{{route('buscar')}}">
 
         <div class="input-field col s12 m2">
             <select id="origen" name="origen">
-                <option value="Huejutla">Huejutla</option>
-                <option value="Atlapexco">Atlapexco</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
             </select>
             <label><span class="material-icons left green-text">location_on</span>Origen</label>
         </div>
         <div class="input-field col s12 m2">
             <select id="destino" name="destino">
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
-                <option value="Huejutla">Huejutla</option>
             </select>
             <label><span class="material-icons left green-text">location_on</span>Destino</label>
         </div>
@@ -95,13 +85,19 @@
 
 @section('scripts')
     <script>
+      document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+</script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelectorAll('.datepicker');
             var instances = M.Datepicker.init(elems, {
-                format: 'dd mmm, yyyy',
+                format: 'dd-mm-yyyy',
                 i18n: {
                     months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Dic"],
+                    monthsShort: ["01", "02", "03", "04", "05", "05", "07", "08", "09", "10", "11", "12"],
                     weekdays: ["Domingo","Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                     weekdaysShort: ["Dom","Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
                     weekdaysAbbrev: ["D","L", "M", "M", "J", "V", "S"],
@@ -153,5 +149,70 @@
             document.getElementById('ninos').value = ninos;
         }
     </script>
+    <script>
+        const ciudadesM= [
+        "Huejutla",
+        "Atlapexco",
+        "Pachuca",
+        "Tulancingo",
+        "Mineral de la Reforma",
+        "Tizayuca",
+        "Actopan",
+        "Ciudad de México",
+        "Guadalajara",
+        "Monterrey",
+        "Puebla",
+        "Tijuana",
+        "Querétaro",
+        "Mérida",
+        "Cancún",
+        "Oaxaca",
+        ];
 
+        function cargarDestinos(ciudades, selectId, origenSeleccionado) {
+            const selectDestino = document.getElementById(selectId);
+
+            ciudades.forEach(ciudad => {
+                if (ciudad !== origenSeleccionado) {
+                const opcion = document.createElement("option");
+                opcion.text = ciudad;
+                opcion.value = ciudad;
+                selectDestino.appendChild(opcion);
+                }
+            });
+
+            selectDestino.addEventListener("change", function() {
+                const origenSeleccionado = this.value;
+                localStorage.setItem('destino', origenSeleccionado);
+            });
+
+        }
+
+        // Función para agregar opciones al select de origen
+        function agregarCiudadesAlSelect(ciudades, selectId, selectDestinoId) {
+            const selectOrigen = document.getElementById(selectId);
+
+            ciudades.forEach(ciudad => {
+                const opcion = document.createElement("option");
+                opcion.text = ciudad;
+                opcion.value = ciudad;
+                if(localStorage.getItem('origen') === ciudad){
+                    opcion.selected = true;
+                }
+                selectOrigen.appendChild(opcion);
+            });
+
+            // Evento change para el select de origen
+            selectOrigen.addEventListener("change", function() {
+                const origenSeleccionado = this.value;
+                localStorage.setItem('origen', origenSeleccionado);
+                window.location.reload();
+            });
+        }
+
+        agregarCiudadesAlSelect(ciudadesM, "origen", "destino");
+        const ciudadesFiltradas = ciudadesM.filter(ciudad => ciudad !== localStorage.getItem('origen'));
+        cargarDestinos(ciudadesFiltradas, "destino", localStorage.getItem('origen'));
+
+    </script>
 @endsection
