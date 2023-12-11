@@ -144,7 +144,7 @@
                     </span>
                     <span id="duracion">Duracion: 8:00 horas</span> 
                 </div>
-                <div class="col s2">Disponibles: 25</div>
+                <div class="col s2">Disponibles: 24</div>
             </div>
         </div>
         <div class="col s12" style="background-color: grey;">

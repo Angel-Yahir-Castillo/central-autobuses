@@ -215,4 +215,17 @@
         cargarDestinos(ciudadesFiltradas, "destino", localStorage.getItem('origen'));
 
     </script>
+
+    @if (session('info'))
+        <script>
+            localStorage.clear();
+            M.toast({
+                html: '{{ session("info")}} ',
+                classes: 'black',
+                displayLength: 3000,
+            })
+            //alert('{{ session("info")}} ');
+        </script>
+    @endif
+
 @endsection

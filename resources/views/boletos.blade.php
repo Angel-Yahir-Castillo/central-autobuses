@@ -31,7 +31,8 @@
     </div></center>
 
     <div class="row container "> 
-        <form class="col s12 m6" method="post" action="#">
+        <form class="col s12 m6" method="post" action="{{route('almacenar')}}">
+        @csrf
             <div class="row section" style="border: solid 1px black;">
                 <div class="col s12"><b>Datos del cliente</b></div>
                 <div class="col s12 container">
@@ -117,6 +118,10 @@
                         <div class="col s1"></div>
                     </div>
                 @endfor
+
+            </div>
+            <div class="col s12">
+                <input type="submit" class="btn" value="Seleccionar Asientos ">
             </div>
         </form>
         <div class="col s0 m1"></div>
